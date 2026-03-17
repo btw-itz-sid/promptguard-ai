@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>PromptGuard AI — Real-time Injection Firewall</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="CSS/main.css"/>
+  <link rel="stylesheet" href="CSS/animations.css"/>
+  <link rel="stylesheet" href="CSS/dashboard.css"/>
+</head>
+<body>
+
+<!-- Background glows -->
+<div class="bg-glow-tl"></div>
+<div class="bg-glow-br"></div>
+
+<!-- ════════════════════════════════════════════════
+     HEADER
+════════════════════════════════════════════════ -->
+<header>
+  <div class="hdr">
+
+    <div class="hdr-left">
+      <!-- Logo -->
+      <div class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div>
+          <div class="brand-name">PromptGuard AI</div>
+          <div class="brand-sub">Real-time Injection Firewall</div>
+        </div>
+      </div>
+
+      <!-- Nav tabs -->
+      <div class="nav-tabs">
+        <button class="nav-tab active" data-tab="dashboard" onclick="goTab('dashboard')">
+          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          Dashboard
+        </button>
+        <button class="nav-tab" data-tab="rules" onclick="goTab('rules')">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>
+          Detection Rules
+        </button>
+      </div>
+    </div>
+
+    <!-- Right side -->
+    <div class="hdr-right">
+      <div class="status-pill">
+        <div class="status-dot anim-pulse"></div>
+        <span class="status-txt">Backend Connected</span>
+      </div>
+      <div class="icon-btn">
+        <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        <span class="notif-badge">3</span>
+      </div>
+      <div class="icon-btn">
+        <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </div>
+    </div>
+
+  </div>
+</header>
+
+
+<!-- ════════════════════════════════════════════════
+     MAIN
+════════════════════════════════════════════════ -->
+<main>
+
+  <!-- ── DASHBOARD PANE ───────────────────────────────── -->
+  <div id="pane-dashboard" class="pane active">
+    <div class="space-y">
+
+      <!-- SecurityStats -->
+      <div id="stats-grid" class="stats-grid"></div>
+
+      <!-- PromptTester -->
+      <div class="card">
+        <div class="card-hdr">
+          <div class="card-hdr-left">
+            <div class="card-icon" style="background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.2)">
+              <svg viewBox="0 0 24 24" style="stroke:#22d3ee"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div>
+              <div class="card-title">Live Prompt Scanner</div>
+              <div class="card-sub">Test prompts for injection attacks</div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body" style="display:flex;flex-direction:column;gap:16px">
+          <div class="prompt-wrap">
+            <textarea id="scan-input" class="prompt-ta" placeholder="Enter a prompt to scan for injection attacks...&#10;&#10;Tip: Press Ctrl+Enter to scan"></textarea>
+            <span class="char-cnt" id="char-cnt">0 characters</span>
+          </div>
+          <button class="scan-btn" id="scan-btn" onclick="runScan()">
+            <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round">
+              <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+            </svg>
+            Scan Prompt
+          </button>
+          <div id="scan-result"></div>
+        </div>
+      </div>
+
+      <!-- Charts row: ThreatChart + AttackVectorPie -->
+      <div class="charts-row">
+
+        <!-- ThreatChart -->
+        <div class="card">
+          <div class="card-hdr">
+            <div>
+              <div class="card-title">24-Hour Threat Analysis</div>
+              <div class="card-sub">Prompt classification over time</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <canvas id="area-chart-canvas" style="width:100%;height:320px;display:block"></canvas>
+          </div>
+        </div>
+
+        <!-- AttackVectorPie -->
+        <div class="card">
+          <div class="card-hdr">
+            <div>
+              <div class="card-title">Attack Vector Distribution</div>
+              <div class="card-sub">Breakdown by injection type</div>
+            </div>
+          </div>
+          <div class="card-body" style="display:flex;flex-direction:column;gap:16px">
+            <canvas id="pie-canvas" style="width:100%;height:220px;display:block"></canvas>
+            <div id="pie-legend" style="display:flex;flex-direction:column;gap:8px"></div>
+            <div style="margin-top:8px;padding-top:16px;border-top:1px solid rgba(30,41,59,.5);display:flex;justify-content:space-between;align-items:center">
+              <span style="font-size:13px;color:#94a3b8;font-family:'JetBrains Mono',monospace">Total Threats Detected</span>
+              <span style="font-size:24px;font-weight:700;color:#fb7185">886</span>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /charts-row -->
+
+      <!-- ThreatMonitor -->
+      <div class="card">
+        <div class="card-hdr">
+          <div class="card-hdr-left">
+            <div class="card-icon" style="background:rgba(244,63,94,.1);border:1px solid rgba(244,63,94,.2)">
+              <svg viewBox="0 0 24 24" style="stroke:#fb7185"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div>
+              <div class="card-title">Real-Time Threat Monitor</div>
+              <div class="card-sub">Live prompt analysis stream</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <div class="live-dot anim-glow"></div>
+            <span style="font-size:12px;font-family:'JetBrains Mono',monospace;color:#64748b">ACTIVE</span>
+          </div>
+        </div>
+        <div id="monitor-body" class="monitor-body"></div>
+      </div>
+
+    </div>
+  </div><!-- /pane-dashboard -->
+
+
+  <!-- ── RULES PANE ────────────────────────────────────── -->
+  <div id="pane-rules" class="pane">
+    <div class="space-y">
+      <div>
+        <h2 style="font-size:24px;font-weight:700;margin-bottom:8px">Detection Rules Configuration</h2>
+        <p style="font-size:14px;color:#94a3b8">Manage pattern-based rules to detect and block prompt injection attempts</p>
+      </div>
+
+      <!-- DetectionRules card -->
+      <div class="card">
+        <div class="card-hdr">
+          <div class="card-hdr-left">
+            <div class="card-icon" style="background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.2)">
+              <svg viewBox="0 0 24 24" style="stroke:#22d3ee"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            </div>
+            <div>
+              <div class="card-title">Detection Rules</div>
+              <div class="card-sub mono" id="rules-active-count">6 active / 6 total</div>
+            </div>
+          </div>
+          <button class="rules-add-btn">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Rule
+          </button>
+        </div>
+        <div id="rules-list"></div>
+      </div>
+    </div>
+  </div><!-- /pane-rules -->
+
+</main>
+
+<!-- Scripts — order matters -->
+<script src="components/gauge.js"></script>
+<script src="components/radar.js"></script>
+<script src="components/logs.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/scanner.js"></script>
+<script src="js/simulator.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>
