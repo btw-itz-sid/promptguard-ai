@@ -27,35 +27,7 @@ PromptGuard AI acts as a real-time firewall layer that:
 MetricValueThreats Blocked1,247Prompts Analyzed45.2KActive Rules89Critical Alerts12
 The dashboard provides real-time visibility into all firewall activity.
 
-🗂️ Project Structure
-PromptGuard AI/
-├── backend/
-│   ├── server.js              # Express server & API routes
-│   └── engine/
-│       ├── analyzer.js        # Core threat analysis logic
-│       ├── semantic.js        # Semantic understanding engine
-│       ├── sanitizer.js       # Input sanitization module
-│       ├── deobfuscator.js    # Obfuscation detection
-│       ├── rules.js           # Detection rules engine
-│       └── context.js         # Context-aware analysis
-├── Frontend/
-│   ├── index.html             # Main dashboard UI
-│   ├── CSS/
-│   │   ├── main.css           # Core styles
-│   │   ├── dashboard.css      # Dashboard layout
-│   │   └── animations.css     # UI animations
-│   ├── js/
-│   │   ├── app.js             # Main application logic
-│   │   ├── scanner.js         # Prompt scanner interface
-│   │   ├── ui.js              # UI interactions
-│   │   ├── charts.js          # Analytics charts
-│   │   └── simulator.js       # Attack simulator
-│   └── components/
-│       ├── gauge.js           # Threat gauge component
-│       ├── logs.js            # Activity logs component
-│       └── radar.js           # Threat radar component
-├── index.js                   # App entry point
-└── package.json
+
 
 ⚙️ Installation & Setup
 Prerequisites
